@@ -1,0 +1,21 @@
+{
+    "manifest_version": 2,
+    "name": "car.gr-ignore",
+    "version": "0.0.0",
+    "description": "",
+
+    "content_scripts": [
+        {
+            "matches": ["https://www.car.gr/*"],
+            "js": ["car.js"],
+            "run_at": "document_end"
+        }
+    ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "content_security_policy":
+        "script-src 'self' 'unsafe-eval'; object-src 'self'; img-src * data: 'self' 'unsafe-eval'",
+    "permissions": ["tabs", "<all_urls>", "activeTab"]
+}

@@ -1,0 +1,40 @@
+{
+    "name": "car.gr-ignore",
+    "version": "0.0.0",
+    "description": "",
+    "author": "Nikos Katsos <nikoskatsos101@gmail.com>",
+
+    "repository": "https://github.com/katsos/car.gr-ignore",
+    "license": "UNLICENSED",
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-eslint": "^7.2.3",
+        "babel-loader": "^7.1.1",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "babel-plugin-transform-react-jsx": "^6.24.1",
+        "babel-preset-env": "^1.6.1",
+        "copy-webpack-plugin": "^4.0.1",
+        "crx-webpack-plugin": "^0.1.5",
+        "eslint": "^4.2.0",
+        "eslint-plugin-react": "^7.1.0",
+        "nodemon": "^1.14.12",
+        "rimraf": "^2.6.1",
+        "webpack": "^3.2.0"
+    },
+    "scripts": {
+        "start": "./node_modules/.bin/nodemon --exec yarn build",
+        "prebuild": "rimraf dist",
+        "build": "webpack"
+    },
+    "nodemonConfig": {
+        "ignore": [
+            "dist/",
+            "node_modules"
+        ],
+        "execMap": {
+            "js": "node"
+        },
+        "ext": "js html css",
+        "verbose": true
+    }
+}
