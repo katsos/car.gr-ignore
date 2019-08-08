@@ -48,8 +48,9 @@ function setIgnoreButton() {
 function hideIgnoredAds(ads, ignored) {
   return ads.map((ad) => {
     const href = getAdHref(ad);
-    if (ignored.includes(href)) ad.parentNode.removeChild(ad);
-    return ad;
+    if (!ignored.includes(href)) return ad;
+    const closest = ad.closest('.clsfd_list_row_group');
+    closest.parentNode.removeChild(closest);
   });
 }
 
