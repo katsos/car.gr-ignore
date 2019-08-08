@@ -35,7 +35,8 @@ function setIgnoreButton() {
   ads.map((ad) => {
     const btn = document.createElement('button');
     btn.innerText = 'Ignore';
-    btn.style     = 'position:absolute; bottom:0;';
+    btn.style     = 'position:absolute; bottom:0; left: 0;';
+    btn.className = 'btn btn-default btn-sm';
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
