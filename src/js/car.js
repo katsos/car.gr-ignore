@@ -23,7 +23,7 @@ function setIgnored(url) {
 function ignore(ad) {
   const href = getAdHref(ad);
   setIgnored(href);
-  ad.parentNode.removeChild(ad);
+  hideContainer(ad)
 }
 
 function getAdHref(ad) {
@@ -49,9 +49,13 @@ function hideIgnoredAds(ads, ignored) {
   return ads.map((ad) => {
     const href = getAdHref(ad);
     if (!ignored.includes(href)) return ad;
-    const closest = ad.closest('.clsfd_list_row_group');
-    closest.parentNode.removeChild(closest);
+    hideContainer(ad);
   });
+}
+
+function hideContainer(ad) {
+  const closest = ad.closest('.clsfd_list_row_group');
+  closest.parentNode.removeChild(closest);
 }
 
 (async () => {
