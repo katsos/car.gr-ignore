@@ -14,27 +14,26 @@ function getIgnored() {
   });
 }
 
-function setIgnored(url) {
+function setIgnored(identifier) {
   return new Promise((res, rej) => {
-    chrome.runtime.sendMessage({ action: 'set_ignored', url }, res);
+    chrome.runtime.sendMessage({ action: 'set_ignored', identifier }, res);
   });
 }
 
 function ignore(ad) {
-  const href = getAdHref(ad);
-  setIgnored(href);
-  hideContainer(ad)
+  const adIdentifier = getAdIdentifier(ad);
+  setIgnored(adIdentifier);
+  hideAd(ad)
 }
 
-function getAdHref(ad) {
-  return ad.href;
+function getAdIdentifier(ad) {
+  return ad.querySelector('a').href;
 }
 
 function setIgnoreButton(ads = getAds()) {
   ads.map((ad) => {
     const btn = document.createElement('button');
     btn.innerText = 'Ignore';
-    btn.style     = 'position:absolute; bottom:0; left: 0;';
     btn.className = 'btn btn-outline-primary btn-sm';
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -46,15 +45,15 @@ function setIgnoreButton(ads = getAds()) {
 }
 
 function hideIgnoredAds(ads, ignored) {
-  return ads.map((ad) => {
-    const href = getAdHref(ad);
-    if (!ignored.includes(href)) return ad;
-    hideContainer(ad);
+  ads.forEach((ad) => {
+    const adIdentifier = getAdIdentifier(ad);
+    if (!ignored.includes(adIdentifier)) return;
+    hideAd(ad);
   });
 }
 
-function hideContainer(ad) {
-  ad.parentNode.removeChild(ad);
+function hideAd(ad) {
+  ad.style.display = 'none';
 }
 
 (async () => {
@@ -64,6 +63,6 @@ function hideContainer(ad) {
   hideIgnoredAds(ads, ignored);
   console.log(`${ads.length} ads, ${ignored.length} ignored.`);
 
-  setTimeout(() => setIgnoreButton(ads), 1000);
+  setTimeout(() => setIgnoreButton(ads), 2000);
 })();
 
