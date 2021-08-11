@@ -55,8 +55,7 @@ function hideIgnoredAds(ads, ignored) {
 }
 
 function hideContainer(ad) {
-  const closest = ad.closest('.clsfd_list_row_group');
-  closest.parentNode.removeChild(closest);
+  ad.parentNode.removeChild(ad);
 }
 
 (async () => {
