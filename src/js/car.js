@@ -1,5 +1,5 @@
 const SELECTORS = {
-  'ad_container': '.vehicle.list-group-item.clsfd_list_row',
+  'ad_container': '.list li',
 };
 
 chrome.runtime.sendMessage({ action: 'init' }, console.log);
@@ -30,19 +30,18 @@ function getAdHref(ad) {
   return ad.href;
 }
 
-function setIgnoreButton() {
-  const ads = getAds();
+function setIgnoreButton(ads = getAds()) {
   ads.map((ad) => {
     const btn = document.createElement('button');
     btn.innerText = 'Ignore';
     btn.style     = 'position:absolute; bottom:0; left: 0;';
-    btn.className = 'btn btn-default btn-sm';
+    btn.className = 'btn btn-outline-primary btn-sm';
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
       ignore(ad);
     });
-    ad.appendChild(btn);
+    ad.querySelector('div').appendChild(btn);
   });
 }
 
@@ -60,9 +59,11 @@ function hideContainer(ad) {
 
 (async () => {
   const ads = getAds();
+  
   const ignored = await getIgnored();
+  hideIgnoredAds(ads, ignored);
   console.log(`${ads.length} ads, ${ignored.length} ignored.`);
 
-  const visibleAds = hideIgnoredAds(ads, ignored);
-  setIgnoreButton()
-})()
+  setTimeout(() => setIgnoreButton(ads), 1000);
+})();
+
