@@ -5,7 +5,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (action === 'init') sendResponse('👍');
   if (action === 'get_ignored') sendResponse(getIgnored());
   if (action === 'set_ignored') {
-    const ignored = storeIgnored(message.url);
+    const ignored = storeIgnored(message.identifier);
     sendResponse(ignored);
   }
 });
