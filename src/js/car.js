@@ -1,5 +1,6 @@
 const SELECTORS = {
-  'ad_container': '.list li',
+  ad_container: '.list li',
+  ignoreButtonClassname: 'carIgnore'
 };
 
 chrome.runtime.sendMessage({ action: 'init' }, console.log);
@@ -34,7 +35,7 @@ function setIgnoreButton(ads = getAds()) {
   ads.map((ad) => {
     const btn = document.createElement('button');
     btn.innerText = 'Ignore';
-    btn.className = 'btn btn-outline-primary btn-sm';
+    btn.className = `btn btn-outline-primary btn-sm ${SELECTORS.ignoreButtonClassname}`;
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       e.preventDefault();
@@ -56,13 +57,14 @@ function hideAd(ad) {
   ad.style.display = 'none';
 }
 
-(async () => {
+setInterval(async () => {
   const ads = getAds();
-  
+
   const ignored = await getIgnored();
   hideIgnoredAds(ads, ignored);
   console.log(`${ads.length} ads, ${ignored.length} ignored.`);
 
-  setTimeout(() => setIgnoreButton(ads), 2000);
-})();
+  if (document.getElementsByClassName(SELECTORS.ignoreButtonClassname).length) return;
+  setIgnoreButton(ads);
+}, 1000);
 
