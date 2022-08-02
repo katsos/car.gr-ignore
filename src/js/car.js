@@ -1,30 +1,31 @@
-const SELECTORS = {
-  ad_container: '.list li',
-  ignoreButtonClassname: 'carIgnore'
-};
+import localforage from 'localforage';
 
-chrome.runtime.sendMessage({ action: 'init' }, console.log);
+localforage.config({
+  driver: localforage.INDEXEDDB,
+  name: 'car-gr-ignore',
+  version: 1.0,
+  size: 4980736, // Size of database, in bytes. WebSQL-only for now.
+  storeName: 'ignore', // Should be alphanumeric, with underscores.
+  description: 'Super powers unleashed',
+});
+
+const SELECTORS = {
+  ad_container: '.list-unstyled li',
+  ignoreButtonClassname: 'carIgnore',
+};
 
 function getAds() {
   return Array.from(document.querySelectorAll(SELECTORS.ad_container));
 }
 
-function getIgnored() {
-  return new Promise((res, rej) => {
-    chrome.runtime.sendMessage({ action: 'get_ignored' }, res);
-  });
-}
-
-function setIgnored(identifier) {
-  return new Promise((res, rej) => {
-    chrome.runtime.sendMessage({ action: 'set_ignored', identifier }, res);
-  });
+async function getIgnored() {
+  return localforage.keys();
 }
 
 function ignore(ad) {
   const adIdentifier = getAdIdentifier(ad);
-  setIgnored(adIdentifier);
-  hideAd(ad)
+  localforage.setItem(adIdentifier, new Date());
+  hideAd(ad);
 }
 
 function getAdIdentifier(ad) {
@@ -45,7 +46,7 @@ function setIgnoreButton(ads = getAds()) {
   });
 }
 
-function hideIgnoredAds(ads, ignored) {
+function hideIgnoredAds(ads = [], ignored = []) {
   ads.forEach((ad) => {
     const adIdentifier = getAdIdentifier(ad);
     if (!ignored.includes(adIdentifier)) return;
@@ -59,12 +60,14 @@ function hideAd(ad) {
 
 setInterval(async () => {
   const ads = getAds();
+  const ignored = (await getIgnored()) || [];
 
-  const ignored = await getIgnored();
   hideIgnoredAds(ads, ignored);
   console.log(`${ads.length} ads, ${ignored.length} ignored.`);
 
-  if (document.getElementsByClassName(SELECTORS.ignoreButtonClassname).length) return;
+  if (document.getElementsByClassName(SELECTORS.ignoreButtonClassname).length) {
+    return;
+  }
+
   setIgnoreButton(ads);
 }, 1000);
-

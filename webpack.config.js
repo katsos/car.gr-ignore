@@ -5,12 +5,11 @@ const { version } = require('./package.json');
 
 module.exports = {
   entry: {
-    background: './src/js/background.js',
-    'car': './src/js/car.js'
+    car: './src/js/car.js',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+    filename: '[name].js',
   },
 
   cache: true,
@@ -21,14 +20,10 @@ module.exports = {
       {
         test: /\.js?$/,
         include: [path.resolve(__dirname, 'src')],
-        loader: 'babel-loader'
-      }
-    ]
+        loader: 'babel-loader',
+      },
+    ],
   },
 
-  plugins: [
-    new CopyWebpackPlugin([
-      { from: './manifest.json' },
-    ])
-  ]
+  plugins: [new CopyWebpackPlugin([{ from: './manifest.json' }])],
 };
